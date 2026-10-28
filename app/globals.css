@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "MaterialIcons";
+  src: url("/fonts/MaterialIcons-Regular.otf") format("opentype");
+  font-display: block;
+}
+
+:root {
+  --primary: #d84e17;
+  --background: #fbf3e7;
+  --text-dark: #28140e;
+}
+
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--background);               /* scaffoldBackgroundColor */
+  color: var(--text-dark);
+  font-family: var(--font-manrope), sans-serif; /* GoogleFonts.manropeTextTheme */
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision; /* CanvasKit lays text out unhinted with fractional advances */
+}
+button { font-family: inherit; cursor: pointer; border: 0; background: none; padding: 0; color: inherit; }
+input, textarea, select { font-family: inherit; }
+a { color: inherit; text-decoration: none; }
+
+.material-icon {
+  display: inline-block;
+  font-family: "MaterialIcons";
+  font-weight: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  direction: ltr;
+  user-select: none;
+  flex: none;
+  font-feature-settings: "liga";
+  -webkit-font-feature-settings: "liga";
+}
+
+.font-serif-bree { font-family: var(--font-bree), serif; }
+.hide-scrollbar { scrollbar-width: none; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Flutter InkWell-like pressed feedback is approximated by native :active; hover/focus states per component. */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes popin { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes shimmerbg { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+[dir="rtl"] .mirror-rtl { transform: scaleX(-1); }
+.bree-scope, .bree-scope * { font-synthesis: none; }
+.ctf input::placeholder, .ctf textarea::placeholder { color: #A08371; opacity: 1; }
+textarea::placeholder { color: #A08371; opacity: 1; }
+
+@keyframes orderCardIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+.order-card-in { animation: orderCardIn 300ms both ease-out; }
+
+@keyframes gridPop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+.grid-pop { animation: gridPop 300ms cubic-bezier(.215,.61,.355,1) both; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/*
+ * Flutter text-weight quirk (measured against the Flutter build via ink coverage): plain Text()/TextField widgets draw with
+ * the theme's single GoogleFonts.manrope w500 face. A requested weight <= 600 therefore renders as w500, and a requested
+ * weight >= 700 renders as that face with Skia's synthetic bold (visually ~w700/w800). Screens ported from plain-TextStyle
+ * Dart code therefore use fontWeight 500 for 400/500/600 and keep 700/800 as requested; unspecified weight is w500.
+ */
+.fx-plain { font-weight: 500; }

@@ -159,6 +159,15 @@ export const menuStore = new Store<MenuState>({
 });
 let mOffers: FoodItemWithOffer[] = [], mSearchId = 0, mDebounce: ReturnType<typeof setTimeout> | null = null;
 
+// Web-only: a branch switch changes the catalog, so drop what was loaded for the old branch and refetch.
+api.onBranchChange(() => {
+  hOffers = []; hMaps = null; hOffersLoaded = false; mOffers = [];
+  homeStore.set({ categories: [], featuredItems: [], popularItems: [], isInSearchMode: false, searchResults: [], lastSearchQuery: "" });
+  menuStore.set({ categories: [], allFoodItems: [], foodItems: [], searchQuery: "", currentCategoryId: null });
+  if (homeStore.state.hasInitialized) void loadHomeData();
+  if (typeof window !== "undefined" && window.location.pathname.startsWith("/menu")) { void loadCategories(); void loadFoodItems(null); }
+});
+
 export function menuSetLanguage(code: string) {
   const s = menuStore.state;
   if (s.currentLanguage === code) return;

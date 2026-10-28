@@ -1,0 +1,14 @@
+node_modules
+.next
+.next-*
+.git
+.env
+.env.*
+e2e
+tests
+visual-report
+deploy
+*.md
+tsconfig.tsbuildinfo
+Dockerfile
+docker-compose.yml

@@ -1,0 +1,13 @@
+# Run on the VPS. nginx (deploy/nginx-saborly-next.conf) proxies to 127.0.0.1:3010.
+# IMAGE is set by the CI deploy step, e.g. ghcr.io/<owner>/saborly-next:<sha>.
+services:
+  saborly-next:
+    image: ${IMAGE:-saborly-next:local}
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY:-}
+    container_name: saborly-next
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3010:3010"

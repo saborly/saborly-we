@@ -7,15 +7,19 @@ export function useBranchName(): string | null {
   const [name, setName] = useState<string | null>(null);
   useEffect(() => {
     let alive = true;
-    const id = api.branchId;
-    if (!id) return;
-    api.request("GET", "/branches/public")
-      .then((r) => {
-        const hit = (r.data.branches ?? []).find((b: any) => `${b._id}` === id);
-        if (alive && hit?.name) setName(`${hit.name}`);
-      })
-      .catch(() => {});
-    return () => { alive = false; };
+    const load = () => {
+      const id = api.branchId;
+      if (!id) { setName(null); return; }
+      api.request("GET", "/branches/public")
+        .then((r) => {
+          const hit = (r.data.branches ?? []).find((b: any) => `${b._id}` === id);
+          if (alive && api.branchId === id && hit?.name) setName(`${hit.name}`);
+        })
+        .catch(() => {});
+    };
+    load();
+    const off = api.onBranchChange(load); // header stays mounted across routes: refresh when the branch changes
+    return () => { alive = false; off(); };
   }, []);
   return name;
 }

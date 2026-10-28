@@ -71,8 +71,11 @@ class ApiService {
 
   get branchId() { return this._branchId; }
   loadBranchFromPrefs() { this._branchId = prefs.getString("branch_id"); }
-  setBranchId(id: string) { this._branchId = id; prefs.set("branch_id", id); this.clearCache(); }
-  clearBranchId() { this._branchId = null; prefs.remove("branch_id"); this.clearCache(); }
+  setBranchId(id: string) { const changed = this._branchId !== id; this._branchId = id; prefs.set("branch_id", id); this.clearCache(); if (changed) this.branchListeners.forEach((l) => l()); }
+  clearBranchId() { this._branchId = null; prefs.remove("branch_id"); this.clearCache(); this.branchListeners.forEach((l) => l()); }
+  /** Web-only: lets mounted UI (header pill, cached catalogs) react to a branch switch without a reload. */
+  private branchListeners = new Set<() => void>();
+  onBranchChange(l: () => void) { this.branchListeners.add(l); return () => { this.branchListeners.delete(l); }; }
 
   loadSelectedLocationFromPrefs() {
     this.selectedLat = prefs.getDouble("loc_lat");

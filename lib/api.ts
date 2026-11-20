@@ -69,6 +69,7 @@ class ApiService {
   selectedLng: number | null = null;
   selectedAddressText: string | null = null;
 
+  
   get branchId() { return this._branchId; }
   loadBranchFromPrefs() { this._branchId = prefs.getString("branch_id"); }
   setBranchId(id: string) { const changed = this._branchId !== id; this._branchId = id; prefs.set("branch_id", id); this.clearCache(); if (changed) this.branchListeners.forEach((l) => l()); }
